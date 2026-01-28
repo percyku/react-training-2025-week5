@@ -28,15 +28,12 @@ const SingleProduct = () => {
   );
 
   useEffect(() => {
-    console.log(id);
     (async () => {
       try {
         setIsLoading(true);
         const res = await axios.get(
           `${VITE_APP_API_BASE}/api/${VITE_APP_API_PATH}/product/${id}`,
         );
-        console.log(res.data);
-
         setProduct(res.data.product);
       } catch (error) {
         toast.error(`取得產品資料失敗 ${error}`);
@@ -51,6 +48,7 @@ const SingleProduct = () => {
 
   const addToCart = async (id, qty = 1) => {
     try {
+      setIsLoading(true);
       const data = {
         product_id: id,
         qty,
@@ -61,10 +59,11 @@ const SingleProduct = () => {
           data,
         },
       );
-      console.log(res.data);
-      toast.success(`加入購物車成功 `);
+      toast.success(`${res.data.data.product.title} ${res.data.message}`);
     } catch (error) {
       toast.error(`加入購物車失敗 ${error}`);
+    } finally {
+      setIsLoading(false);
     }
   };
   const getSinglePic = (url) => {
